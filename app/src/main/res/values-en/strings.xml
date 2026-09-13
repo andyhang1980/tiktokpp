@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TikTokPP</string>
+    <string name="module_description">TikTok feature module: region spoof, no-watermark download, feed purification, auto translate, playback speed, anti-detection, and more. Target: TikTok 46.9.3.</string>
+
+    <!-- Navigation -->
+    <string name="settings_home">Home</string>
+    <string name="settings_general">General</string>
+    <string name="settings_feed">Feed</string>
+    <string name="settings_downloads">Downloads &amp; Creation</string>
+
+    <!-- Home -->
+    <string name="home_module_status">Module Status</string>
+    <string name="home_lsposed_service">LSPosed Service</string>
+    <string name="home_status_connected">Connected</string>
+    <string name="home_status_disconnected">Disconnected</string>
+    <string name="home_tiktok_not_installed">Not installed</string>
+    <string name="home_version_unknown">Unknown</string>
+    <string name="home_tiktok_tested_version">%s (Tested)</string>
+    <string name="home_tiktok_untested_version">%s (Untested)</string>
+    <string name="home_quick_actions">Quick Actions</string>
+    <string name="home_toki_settings">TikTokPP Settings</string>
+    <string name="home_project">Project</string>
+
+    <!-- Home Actions -->
+    <string name="restart_tiktok">Restart TikTok</string>
+    <string name="restart_tiktok_summary">Restart TikTok process using root privileges</string>
+    <string name="restart_tiktok_success">TikTok restarted</string>
+    <string name="restart_tiktok_failed">Restart failed</string>
+    <string name="root_access_required">Root access required</string>
+    <string name="root_action_timeout">Operation timed out</string>
+    <string name="clear_tiktok_cache">Clear TikTok Cache</string>
+    <string name="clear_tiktok_cache_summary">Clear TikTok app cache using root privileges</string>
+    <string name="clear_tiktok_cache_confirmation">Are you sure you want to clear TikTok cache?</string>
+    <string name="clear_tiktok_cache_success">Cache cleared</string>
+    <string name="clear_tiktok_cache_failed">Failed to clear cache</string>
+    <string name="clear_cache">Clear Cache</string>
+
+    <!-- Settings Actions -->
+    <string name="app_language">App Language</string>
+    <string name="app_language_system">System default</string>
+    <string name="reset_settings">Reset Settings</string>
+    <string name="reset_settings_summary">Restore all settings to defaults</string>
+    <string name="reset_settings_confirmation">Are you sure you want to reset all settings to defaults?</string>
+    <string name="reset">Reset</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+
+    <!-- General Section: Region -->
+    <string name="settings_section_region">Region Settings</string>
+    <string name="region">Region</string>
+    <string name="region_dialog_title">Select Region</string>
+    <string name="region_search_hint">Search region name or code…</string>
+    <string name="region_no_match">No matching regions</string>
+    <string name="region_result_count">%d results</string>
+    <string name="clear_search">Clear search</string>
+    <string name="enable_region_spoof">Region Spoof</string>
+    <string name="enable_region_spoof_summary">Spoof device region to affect content recommendations</string>
+    <string name="language_spoof">Language Spoof</string>
+    <string name="language_spoof_summary">Spoof device system language setting</string>
+    <string name="timezone_spoof">Timezone Spoof</string>
+    <string name="timezone_spoof_summary">Spoof device system timezone setting</string>
+    <string name="skip_startup_login">Skip Startup Login</string>
+    <string name="skip_startup_login_summary">Skip login verification on startup</string>
+    <string name="force_region">Force Region</string>
+    <string name="force_region_summary">Force content from the selected region</string>
+    <string name="gps_spoof">GPS Spoof</string>
+    <string name="gps_spoof_summary">Spoof device GPS location</string>
+    <string name="gps_coordinates">GPS Coordinates</string>
+    <string name="gps_latitude">Latitude</string>
+    <string name="gps_longitude">Longitude</string>
+    <string name="gps_coordinate_invalid">Please enter a valid coordinate</string>
+
+    <!-- General Section: Playback -->
+    <string name="settings_section_playback">Playback Settings</string>
+    <string name="auto_translate_comments">Auto Translate Comments</string>
+    <string name="auto_translate_comments_summary">Automatically translate comments to system language</string>
+    <string name="disable_loop">Disable Loop</string>
+    <string name="disable_loop_summary">Disable automatic video looping</string>
+    <string name="always_show_video_progress_bar">Always Show Progress Bar</string>
+    <string name="always_show_video_progress_bar_summary">Show video progress bar while playing</string>
+    <string name="default_playback_speed">Default Playback Speed</string>
+    <string name="default_playback_speed_dialog_title">Select Playback Speed</string>
+
+    <!-- Downloads Section: Storage -->
+    <string name="settings_section_storage">Download Settings</string>
+    <string name="remove_download_restrictions">Remove Download Restrictions</string>
+    <string name="remove_download_restrictions_summary">Remove regional and permission restrictions on video downloads</string>
+    <string name="video_location">Video Save Path</string>
+    <string name="pic_location">Picture Save Path</string>
+    <string name="gif_location">GIF Save Path</string>
+
+    <!-- Downloads Section: Creation -->
+    <string name="settings_section_creation">Creation Settings</string>
+    <string name="allow_duet">Allow Duet</string>
+    <string name="allow_duet_summary">Remove video duet restrictions</string>
+    <string name="allow_stitch">Allow Stitch</string>
+    <string name="allow_stitch_summary">Remove video stitch restrictions</string>
+
+    <!-- Media Directory -->
+    <string name="media_directory_path">Relative path</string>
+    <string name="media_directory_example">Movies/TikTok</string>
+    <string name="media_directory_hint">Path relative to shared storage</string>
+    <string name="media_directory_invalid">Invalid path format</string>
+
+    <!-- Feed Section: Content Filter -->
+    <string name="settings_section_content_filter">Content Filter</string>
+    <string name="hide_feed_ads">Hide Feed Ads</string>
+    <string name="hide_feed_ads_summary">Hide ads from the feed</string>
+    <string name="hide_live">Hide Live</string>
+    <string name="hide_live_summary">Hide live content from the feed</string>
+    <string name="hide_images">Hide Image Posts</string>
+    <string name="hide_images_summary">Hide image posts from the feed</string>
+    <string name="hide_ai_generated">Hide AI Generated</string>
+    <string name="hide_ai_generated_summary">Hide AI-generated videos from the feed</string>
+    <string name="hide_trending_topics">Hide Trending Topics</string>
+    <string name="hide_trending_topics_summary">Hide trending topic tags on video pages</string>
+    <string name="hide_content_classification">Hide Content Classification</string>
+    <string name="hide_content_classification_summary">Hide content classification tags on video pages</string>
+    <string name="hide_long_posts">Hide Long Videos</string>
+    <string name="hide_long_posts_summary">Hide videos exceeding a duration threshold from the feed</string>
+    <string name="long_post_seconds">Long Video Threshold</string>
+    <string name="duration_seconds">Duration (seconds)</string>
+    <string name="seconds_unit">sec</string>
+    <string name="seconds_value">%d sec</string>
+    <string name="positive_number_required">Please enter a positive integer</string>
+    <string name="disable_offline_cold_cache_with_network">Disable Offline Cold Cache</string>
+    <string name="disable_offline_cold_cache_with_network_summary">Disable offline cold cache when network is available</string>
+
+    <!-- Feed Section: Metric Filter -->
+    <string name="settings_section_metric_filter">Metric Filter</string>
+    <string name="filter_views_likes">Filter by Views/Likes</string>
+    <string name="filter_views_likes_summary">Filter videos based on view count and likes</string>
+    <string name="views_range">Views Range</string>
+    <string name="likes_range">Likes Range</string>
+    <string name="minimum_value">Minimum value</string>
+    <string name="maximum_value_optional">Maximum value (optional)</string>
+    <string name="unlimited">Unlimited</string>
+    <string name="range_rule">Supports K, M, B suffixes (e.g. 20K, 1M)</string>
+    <string name="range_value" formatted="false">%1$s to %2$s</string>
+    <string name="minimum_invalid_error">Invalid minimum value</string>
+    <string name="maximum_invalid_error">Invalid maximum value</string>
+    <string name="range_order_error">Maximum must be greater than minimum</string>
+
+    <!-- Feed Section: Feed Display -->
+    <string name="settings_section_feed_display">Feed Display</string>
+    <string name="show_author_location">Show Author Location</string>
+    <string name="show_author_location_summary">Show author IP location on video pages</string>
+
+    <!-- Feed Section: Page Purification -->
+    <string name="settings_section_page_purification">Page Purification</string>
+    <string name="page_purification">Page Element Purification</string>
+    <string name="page_purification_choose_items">Select elements to hide</string>
+    <string name="page_purification_none_selected">None selected</string>
+    <string name="page_purification_selected_count">%d items selected</string>
+
+    <!-- Purification Options -->
+    <string name="purify_author_avatar">Author Avatar</string>
+    <string name="purify_author_info">Author Info</string>
+    <string name="purify_follow_button">Follow Button</string>
+    <string name="purify_video_description">Video Description</string>
+    <string name="purify_video_tags">Video Tags</string>
+    <string name="purify_music_title">Music Title</string>
+    <string name="purify_music_cover">Music Cover</string>
+    <string name="purify_like_button">Like Button</string>
+    <string name="purify_comment_button">Comment Button</string>
+    <string name="purify_favorite_button">Favorite Button</string>
+    <string name="purify_share_button">Share Button</string>
+    <string name="purify_duet_button">Duet Button</string>
+    <string name="purify_stitch_button">Stitch Button</string>
+    <string name="purify_quick_dm">Quick DM</string>
+    <string name="purify_story_tags">Story Tags</string>
+    <string name="purify_collab_label">Collab Label</string>
+    <string name="purify_commercial_labels">Commercial Labels</string>
+    <string name="purify_creative_tool_anchors">Creative Tool Anchors</string>
+    <string name="purify_movie_anime_anchors">Movie/Anime Anchors</string>
+    <string name="purify_game_anchors">Game Anchors</string>
+    <string name="purify_incentive_share">Incentive Share</string>
+    <string name="purify_tako">Tako</string>
+    <string name="purify_content_search">Content Search</string>
+    <string name="purify_safety_warning">Safety Warning</string>
+    <string name="purify_translation_controls">Translation Controls</string>
+    <string name="purify_status_bar">Status Bar</string>
+    <string name="purify_live_entry">Live Entry</string>
+    <string name="purify_top_navigation">Top Navigation</string>
+    <string name="purify_search_entry">Search Entry</string>
+    <string name="purify_bottom_navigation">Bottom Navigation</string>
+    <string name="purify_video_progress_bar">Video Progress Bar</string>
+
+    <plurals name="region_result_count">
+        <item quantity="one">%d result</item>
+        <item quantity="other">%d results</item>
+    </plurals>
+    <plurals name="page_purification_selected_count">
+        <item quantity="one">%d selected</item>
+        <item quantity="other">%d selected</item>
+    </plurals>
+    <plurals name="seconds_value">
+        <item quantity="one">%d second</item>
+        <item quantity="other">%d seconds</item>
+    </plurals>
+</resources>

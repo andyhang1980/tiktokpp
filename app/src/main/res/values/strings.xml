@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TikTokPP</string>
+    <string name="module_description">TikTok 功能增强模块：地区伪装、无损下载、信息流净化、自动翻译、播放速度控制、反检测等。适配 TikTok 46.9.3。</string>
+
+    <!-- Navigation -->
+    <string name="settings_home">首页</string>
+    <string name="settings_general">通用</string>
+    <string name="settings_feed">信息流</string>
+    <string name="settings_downloads">下载与创作</string>
+
+    <!-- Home -->
+    <string name="home_module_status">模块状态</string>
+    <string name="home_lsposed_service">LSPosed 服务</string>
+    <string name="home_status_connected">已连接</string>
+    <string name="home_status_disconnected">未连接</string>
+    <string name="home_tiktok_not_installed">未安装</string>
+    <string name="home_version_unknown">未知</string>
+    <string name="home_tiktok_tested_version">%s (已测试)</string>
+    <string name="home_tiktok_untested_version">%s (未测试)</string>
+    <string name="home_quick_actions">快捷操作</string>
+    <string name="home_toki_settings">TikTokPP 设置</string>
+    <string name="home_project">项目</string>
+
+    <!-- Home Actions -->
+    <string name="restart_tiktok">重启 TikTok</string>
+    <string name="restart_tiktok_summary">通过 root 权限重启 TikTok 进程</string>
+    <string name="restart_tiktok_success">TikTok 已重启</string>
+    <string name="restart_tiktok_failed">重启失败</string>
+    <string name="root_access_required">需要 root 权限</string>
+    <string name="root_action_timeout">操作超时</string>
+    <string name="clear_tiktok_cache">清除 TikTok 缓存</string>
+    <string name="clear_tiktok_cache_summary">通过 root 权限清除 TikTok 应用缓存</string>
+    <string name="clear_tiktok_cache_confirmation">确定要清除 TikTok 的应用缓存吗？</string>
+    <string name="clear_tiktok_cache_success">缓存已清除</string>
+    <string name="clear_tiktok_cache_failed">清除缓存失败</string>
+    <string name="clear_cache">清除缓存</string>
+
+    <!-- Settings Actions -->
+    <string name="app_language">应用语言</string>
+    <string name="app_language_system">跟随系统</string>
+    <string name="reset_settings">重置设置</string>
+    <string name="reset_settings_summary">将所有设置恢复为默认值</string>
+    <string name="reset_settings_confirmation">确定要将所有设置恢复为默认值吗？</string>
+    <string name="reset">重置</string>
+    <string name="cancel">取消</string>
+    <string name="save">保存</string>
+
+    <!-- General Section: Region -->
+    <string name="settings_section_region">地区设置</string>
+    <string name="region">地区</string>
+    <string name="region_dialog_title">选择地区</string>
+    <string name="region_search_hint">搜索地区名称或代码…</string>
+    <string name="region_no_match">没有匹配的地区</string>
+    <string name="region_result_count">%d 个结果</string>
+    <string name="clear_search">清除搜索</string>
+    <string name="enable_region_spoof">伪装地区</string>
+    <string name="enable_region_spoof_summary">伪装设备所在地区，影响内容推荐</string>
+    <string name="language_spoof">伪装系统语言</string>
+    <string name="language_spoof_summary">伪装设备系统语言设置</string>
+    <string name="timezone_spoof">伪装时区</string>
+    <string name="timezone_spoof_summary">伪装设备系统时区设置</string>
+    <string name="skip_startup_login">跳过启动登录检查</string>
+    <string name="skip_startup_login_summary">启动时跳过登录验证页面</string>
+    <string name="force_region">强制地区</string>
+    <string name="force_region_summary">强制使用所选地区的内容</string>
+    <string name="gps_spoof">GPS 伪装</string>
+    <string name="gps_spoof_summary">伪装设备 GPS 定位</string>
+    <string name="gps_coordinates">GPS 坐标</string>
+    <string name="gps_latitude">纬度</string>
+    <string name="gps_longitude">经度</string>
+    <string name="gps_coordinate_invalid">请输入有效的坐标值</string>
+
+    <!-- General Section: Playback -->
+    <string name="settings_section_playback">播放设置</string>
+    <string name="auto_translate_comments">自动翻译评论</string>
+    <string name="auto_translate_comments_summary">自动将评论翻译为系统语言</string>
+    <string name="disable_loop">禁用循环播放</string>
+    <string name="disable_loop_summary">禁用视频自动循环播放</string>
+    <string name="always_show_video_progress_bar">始终显示视频进度条</string>
+    <string name="always_show_video_progress_bar_summary">在视频播放时始终显示进度条</string>
+    <string name="default_playback_speed">默认播放速度</string>
+    <string name="default_playback_speed_dialog_title">选择播放速度</string>
+
+    <!-- Downloads Section: Storage -->
+    <string name="settings_section_storage">下载设置</string>
+    <string name="remove_download_restrictions">移除下载限制</string>
+    <string name="remove_download_restrictions_summary">移除视频下载的地区和权限限制</string>
+    <string name="video_location">视频保存路径</string>
+    <string name="pic_location">图片保存路径</string>
+    <string name="gif_location">GIF 保存路径</string>
+
+    <!-- Downloads Section: Creation -->
+    <string name="settings_section_creation">创作设置</string>
+    <string name="allow_duet">允许合拍</string>
+    <string name="allow_duet_summary">移除视频合拍限制</string>
+    <string name="allow_stitch">允许拼接</string>
+    <string name="allow_stitch_summary">移除视频拼接限制</string>
+
+    <!-- Media Directory -->
+    <string name="media_directory_path">相对路径</string>
+    <string name="media_directory_example">Movies/TikTok</string>
+    <string name="media_directory_hint">相对于共享存储的路径</string>
+    <string name="media_directory_invalid">路径格式无效</string>
+
+    <!-- Feed Section: Content Filter -->
+    <string name="settings_section_content_filter">内容过滤</string>
+    <string name="hide_feed_ads">隐藏信息流广告</string>
+    <string name="hide_feed_ads_summary">在信息流中隐藏广告内容</string>
+    <string name="hide_live">隐藏直播</string>
+    <string name="hide_live_summary">在信息流中隐藏直播内容</string>
+    <string name="hide_images">隐藏图文</string>
+    <string name="hide_images_summary">在信息流中隐藏图文内容</string>
+    <string name="hide_ai_generated">隐藏 AI 生成内容</string>
+    <string name="hide_ai_generated_summary">在信息流中隐藏 AI 生成的视频</string>
+    <string name="hide_trending_topics">隐藏热门话题</string>
+    <string name="hide_trending_topics_summary">在视频页面隐藏热门话题标签</string>
+    <string name="hide_content_classification">隐藏内容分类</string>
+    <string name="hide_content_classification_summary">在视频页面隐藏内容分类标签</string>
+    <string name="hide_long_posts">隐藏长视频</string>
+    <string name="hide_long_posts_summary">在信息流中隐藏超过指定时长的视频</string>
+    <string name="long_post_seconds">长视频阈值</string>
+    <string name="duration_seconds">时长（秒）</string>
+    <string name="seconds_unit">秒</string>
+    <string name="seconds_value">%d 秒</string>
+    <string name="positive_number_required">请输入正整数</string>
+    <string name="disable_offline_cold_cache_with_network">禁用离线冷缓存</string>
+    <string name="disable_offline_cold_cache_with_network_summary">有网络时禁用离线冷缓存机制</string>
+
+    <!-- Feed Section: Metric Filter -->
+    <string name="settings_section_metric_filter">数据过滤</string>
+    <string name="filter_views_likes">按播放量/点赞数过滤</string>
+    <string name="filter_views_likes_summary">根据播放量和点赞数过滤视频</string>
+    <string name="views_range">播放量范围</string>
+    <string name="likes_range">点赞数范围</string>
+    <string name="minimum_value">最小值</string>
+    <string name="maximum_value_optional">最大值（可选）</string>
+    <string name="unlimited">无限制</string>
+    <string name="range_rule">支持 K、M、B 后缀（例如 20K、1M）</string>
+    <string name="range_value" formatted="false">%s – %s</string>
+    <string name="minimum_invalid_error">最小值无效</string>
+    <string name="maximum_invalid_error">最大值无效</string>
+    <string name="range_order_error">最大值必须大于最小值</string>
+
+    <!-- Feed Section: Feed Display -->
+    <string name="settings_section_feed_display">信息流显示</string>
+    <string name="show_author_location">显示作者位置</string>
+    <string name="show_author_location_summary">在视频页面显示作者的 IP 属地</string>
+
+    <!-- Feed Section: Page Purification -->
+    <string name="settings_section_page_purification">页面净化</string>
+    <string name="page_purification">页面元素净化</string>
+    <string name="page_purification_choose_items">选择要隐藏的元素</string>
+    <string name="page_purification_none_selected">未选择</string>
+    <string name="page_purification_selected_count">已选择 %d 项</string>
+
+    <!-- Purification Options -->
+    <string name="purify_author_avatar">作者头像</string>
+    <string name="purify_author_info">作者信息</string>
+    <string name="purify_follow_button">关注按钮</string>
+    <string name="purify_video_description">视频描述</string>
+    <string name="purify_video_tags">视频标签</string>
+    <string name="purify_music_title">音乐标题</string>
+    <string name="purify_music_cover">音乐封面</string>
+    <string name="purify_like_button">点赞按钮</string>
+    <string name="purify_comment_button">评论按钮</string>
+    <string name="purify_favorite_button">收藏按钮</string>
+    <string name="purify_share_button">分享按钮</string>
+    <string name="purify_duet_button">合拍按钮</string>
+    <string name="purify_stitch_button">拼接按钮</string>
+    <string name="purify_quick_dm">快捷私信</string>
+    <string name="purify_story_tags">故事标签</string>
+    <string name="purify_collab_label">合作标签</string>
+    <string name="purify_commercial_labels">商业标签</string>
+    <string name="purify_creative_tool_anchors">创意工具锚点</string>
+    <string name="purify_movie_anime_anchors">影视动漫锚点</string>
+    <string name="purify_game_anchors">游戏锚点</string>
+    <string name="purify_incentive_share">激励分享</string>
+    <string name="purify_tako">Tako</string>
+    <string name="purify_content_search">内容搜索</string>
+    <string name="purify_safety_warning">安全警告</string>
+    <string name="purify_translation_controls">翻译控件</string>
+    <string name="purify_status_bar">状态栏</string>
+    <string name="purify_live_entry">直播入口</string>
+    <string name="purify_top_navigation">顶部导航栏</string>
+    <string name="purify_search_entry">搜索入口</string>
+    <string name="purify_bottom_navigation">底部导航栏</string>
+    <string name="purify_video_progress_bar">视频进度条</string>
+
+    <plurals name="region_result_count">
+        <item quantity="other">%d 个结果</item>
+    </plurals>
+    <plurals name="page_purification_selected_count">
+        <item quantity="other">已选择 %d 项</item>
+    </plurals>
+    <plurals name="seconds_value">
+        <item quantity="other">%d 秒</item>
+    </plurals>
+</resources>
