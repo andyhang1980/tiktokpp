@@ -96,10 +96,11 @@ public final class MainHook extends XposedModule {
                         downloadHooks.installRestrictionRemoval(classLoader));
             }
             // Anti-detection: VPN hiding, mock location hiding, build property spoofing
-            installFeature("anti-detection", () -> {
-                int installedTargets = new AntiDetectionHooks(this).install(classLoader);
-                logInfo("Anti-detection hooks installed: " + installedTargets + " target(s)");
-            });
+            // DISABLED: causes network connectivity issues on some devices
+            // installFeature("anti-detection", () -> {
+            //     int installedTargets = new AntiDetectionHooks(this).install(classLoader);
+            //     logInfo("Anti-detection hooks installed: " + installedTargets + " target(s)");
+            // });
             // The save-directory fields are independent from download permission bypassing.
             installFeature("download location", () ->
                     downloadHooks.installLocation(classLoader, config));

@@ -12,8 +12,8 @@ android {
         applicationId = "com.seepd.tiktokpp"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 425
-        versionName = "1.2.0"
+        versionCode = 426
+        versionName = "1.2.2"
     }
 
     signingConfigs {
@@ -38,8 +38,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     buildFeatures {

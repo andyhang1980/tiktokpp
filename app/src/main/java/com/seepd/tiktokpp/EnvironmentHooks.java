@@ -29,8 +29,8 @@ final class EnvironmentHooks extends HookFeature {
         hookTelephony("getNetworkOperator", preset.operator);
         hookTelephony("getSimOperatorName", preset.operatorName);
         hookTelephony("getNetworkOperatorName", preset.operatorName);
-        hookSubscriptionInfo(preset);
-        hookServiceState(preset);
+        // hookSubscriptionInfo(preset);  // DISABLED: may cause network issues
+        // hookServiceState(preset);  // DISABLED: may cause network issues
         installRegionPayloadPatches(classLoader, preset);
     }
 
