@@ -32,6 +32,7 @@ final class AntiDetectionHooks extends HookFeature {
     /**
      * Filter out VPN/tun network interfaces to hide VPN usage from TikTok.
      * From SimpleTikTokMod: NetworkInterface.getNetworkInterfaces
+     * Only filter interfaces that are actually VPN (have no InetAddress or are point-to-point).
      */
     private int hookVpnDetection(ClassLoader classLoader) {
         int installed = 0;
@@ -45,7 +46,7 @@ final class AntiDetectionHooks extends HookFeature {
                         if (original == null) return null;
                         return Collections.enumeration(
                                 Collections.list(original).stream()
-                                        .filter(ni -> !isVpnInterface(ni.getName()))
+                                        .filter(ni -> !isRealVpnInterface(ni))
                                         .collect(java.util.stream.Collectors.toList()));
                     });
             installed++;
@@ -147,10 +148,18 @@ final class AntiDetectionHooks extends HookFeature {
         return installed;
     }
 
-    private static boolean isVpnInterface(String name) {
+    private static boolean isRealVpnInterface(NetworkInterface ni) {
+        String name = ni.getName();
         if (name == null) return false;
         String lower = name.toLowerCase(java.util.Locale.ROOT);
-        return lower.startsWith("tun") || lower.startsWith("utun")
-                || lower.startsWith("tap") || lower.contains("vpn");
+        // Only filter actual VPN interfaces: must start with tun/tap AND be point-to-point
+        boolean nameMatch = lower.startsWith("tun") || lower.startsWith("utun") || lower.startsWith("tap");
+        if (!nameMatch) return false;
+        // A real VPN interface is point-to-point and typically has no hardware address
+        try {
+            return ni.isPointToPoint() && ni.getHardwareAddress() == null;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
