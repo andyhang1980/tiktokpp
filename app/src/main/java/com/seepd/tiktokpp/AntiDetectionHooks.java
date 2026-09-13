@@ -1,10 +1,6 @@
 package com.seepd.tiktokpp;
 
 import java.lang.reflect.Method;
-import java.net.NetworkInterface;
-import java.util.Collections;
-import java.util.Enumeration;
-
 import android.location.Location;
 import android.os.Build;
 import android.provider.Settings;
@@ -30,31 +26,13 @@ final class AntiDetectionHooks extends HookFeature {
     }
 
     /**
-     * Filter out VPN/tun network interfaces to hide VPN usage from TikTok.
-     * From SimpleTikTokMod: NetworkInterface.getNetworkInterfaces
-     * Only filter interfaces that are actually VPN (have no InetAddress or are point-to-point).
+     * VPN detection hook - disabled by default to prevent breaking network connectivity.
+     * Enable only when VPN hiding is actually needed.
      */
     private int hookVpnDetection(ClassLoader classLoader) {
-        int installed = 0;
-        try {
-            Method method = NetworkInterface.class.getMethod("getNetworkInterfaces");
-            hook(method)
-                    .setId("toki-anti-vpn")
-                    .intercept(chain -> {
-                        Enumeration<NetworkInterface> original =
-                                (Enumeration<NetworkInterface>) chain.proceed();
-                        if (original == null) return null;
-                        return Collections.enumeration(
-                                Collections.list(original).stream()
-                                        .filter(ni -> !isRealVpnInterface(ni))
-                                        .collect(java.util.stream.Collectors.toList()));
-                    });
-            installed++;
-        } catch (Throwable error) {
-            logError("Unable to hook NetworkInterface#getNetworkInterfaces", error);
-        }
-        logInfo("Anti-detection hooks installed: " + installed + " target(s)");
-        return installed;
+        // Disabled: filtering network interfaces can break connectivity on many devices
+        logInfo("Anti-VPN hook skipped (disabled to preserve network connectivity)");
+        return 0;
     }
 
     /**
@@ -148,18 +126,4 @@ final class AntiDetectionHooks extends HookFeature {
         return installed;
     }
 
-    private static boolean isRealVpnInterface(NetworkInterface ni) {
-        String name = ni.getName();
-        if (name == null) return false;
-        String lower = name.toLowerCase(java.util.Locale.ROOT);
-        // Only filter actual VPN interfaces: must start with tun/tap AND be point-to-point
-        boolean nameMatch = lower.startsWith("tun") || lower.startsWith("utun") || lower.startsWith("tap");
-        if (!nameMatch) return false;
-        // A real VPN interface is point-to-point and typically has no hardware address
-        try {
-            return ni.isPointToPoint() && ni.getHardwareAddress() == null;
-        } catch (Exception e) {
-            return false;
-        }
-    }
 }
