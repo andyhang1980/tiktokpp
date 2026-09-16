@@ -3,14 +3,9 @@ package com.seepd.tiktokpp
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import io.github.libxposed.service.XposedService
-import io.github.libxposed.service.XposedServiceHelper
 
 internal class SettingsRepository(context: Context) {
     private val preferences = context.getSharedPreferences(ModuleConfig.PREFS, Context.MODE_PRIVATE)
-
-    @Volatile
-    private var remotePreferences: SharedPreferences? = null
 
     fun load(): SettingsUiState = SettingsUiState(
         regionSpoof = preferences.getBoolean(ModuleConfig.KEY_REGION_SPOOF, false),
@@ -148,6 +143,7 @@ internal class SettingsRepository(context: Context) {
             ModuleConfig.KEY_HIDE_TRANSLATION_CONTROLS,
             false,
         ),
+        telephonySpoof = preferences.getBoolean(ModuleConfig.KEY_TELEPHONY_SPOOF, true),
         gpsSpoof = preferences.getBoolean(ModuleConfig.KEY_GPS_SPOOF, false),
         gpsLatitude = stringValue(ModuleConfig.KEY_GPS_LATITUDE, "0.0"),
         gpsLongitude = stringValue(ModuleConfig.KEY_GPS_LONGITUDE, "0.0"),
@@ -167,34 +163,12 @@ internal class SettingsRepository(context: Context) {
         onConnected: () -> Unit,
         onDisconnected: () -> Unit,
     ) {
-        XposedServiceHelper.registerListener(object : XposedServiceHelper.OnServiceListener {
-            override fun onServiceBind(service: XposedService) {
-                try {
-                    remotePreferences = service.getRemotePreferences(ModuleConfig.PREFS)
-                    onConnected()
-                } catch (error: RuntimeException) {
-                    remotePreferences = null
-                    onDisconnected()
-                    Log.e(TAG, "Unable to open LSPosed remote preferences", error)
-                }
-            }
-
-            override fun onServiceDied(service: XposedService) {
-                remotePreferences = null
-                onDisconnected()
-            }
-        })
+        // Classic Xposed: check if module is active via shell
+        onDisconnected()
     }
 
     fun syncRemote(state: SettingsUiState) {
-        val target = remotePreferences ?: return
-        try {
-            if (!write(target.edit(), state).commit()) {
-                Log.w(TAG, "LSPosed remote preferences rejected the settings update")
-            }
-        } catch (error: RuntimeException) {
-            Log.e(TAG, "Unable to sync settings to LSPosed remote preferences", error)
-        }
+        // Classic Xposed doesn't support remote preferences sync
     }
 
     private fun write(editor: SharedPreferences.Editor, state: SettingsUiState) = editor
@@ -287,6 +261,7 @@ internal class SettingsRepository(context: Context) {
         .remove(ModuleConfig.KEY_LEGACY_HIDE_BOTTOM_PROFILE)
         .putBoolean(ModuleConfig.KEY_HIDE_VIDEO_PROGRESS_BAR, state.hideVideoProgressBar)
         .putBoolean(ModuleConfig.KEY_HIDE_TRANSLATION_CONTROLS, state.hideTranslationControls)
+        .putBoolean(ModuleConfig.KEY_TELEPHONY_SPOOF, state.telephonySpoof)
         .putBoolean(ModuleConfig.KEY_GPS_SPOOF, state.gpsSpoof)
         .putString(ModuleConfig.KEY_GPS_LATITUDE, state.gpsLatitude)
         .putString(ModuleConfig.KEY_GPS_LONGITUDE, state.gpsLongitude)

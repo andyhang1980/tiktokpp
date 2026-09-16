@@ -15,8 +15,6 @@ import java.lang.reflect.Modifier;
 import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import io.github.libxposed.api.XposedModule;
-
 /** Installs view-level component and global navigation purification hooks. */
 final class PurificationHooks extends HookFeature {
     private static final String MAIN_ACTIVITY = "com.ss.android.ugc.aweme.main.MainActivity";
@@ -24,8 +22,7 @@ final class PurificationHooks extends HookFeature {
     private final AtomicBoolean globalVisibilityLogged = new AtomicBoolean(false);
     private final WeakHashMap<View, Boolean> observedRoots = new WeakHashMap<>();
 
-    PurificationHooks(XposedModule module) {
-        super(module);
+    PurificationHooks() {
     }
 
     int installComponents(ClassLoader classLoader, ModuleConfig config) {

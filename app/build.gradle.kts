@@ -37,6 +37,18 @@ android {
         }
     }
 
+    sourceSets {
+        getByName("main") {
+            assets.srcDirs("src/main/assets")
+        }
+    }
+
+    packagingOptions {
+        resources {
+            excludes += listOf("META-INF/*")
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -74,8 +86,7 @@ dependencies {
     implementation(libs.lifecycle.runtime.compose)
     implementation(libs.lifecycle.viewmodel.compose)
 
-    compileOnly(libs.libxposed.api)
-    implementation(libs.libxposed.service)
+    compileOnly(libs.xposed.api)
 
     testImplementation(libs.junit)
 }

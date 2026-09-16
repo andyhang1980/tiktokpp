@@ -1,126 +1,125 @@
 package com.seepd.tiktokpp;
 
 import java.lang.reflect.Method;
-import android.location.Location;
-import android.os.Build;
-import android.provider.Settings;
+import java.net.NetworkInterface;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Locale;
 
-import io.github.libxposed.api.XposedModule;
+import android.telephony.TelephonyManager;
 
 /**
- * Anti-detection hooks: VPN hiding, mock location hiding, build property spoofing.
- * Adapted from SimpleTikTokMod and GlobalKit modules.
+ * Anti-detection hooks: VPN hiding, SIM/network spoofing.
+ * Adapted from SimpleTikTokMod — does NOT hook SystemProperties,
+ * Settings.Secure, or Location to avoid TikTok crash.
  */
 final class AntiDetectionHooks extends HookFeature {
 
-    AntiDetectionHooks(XposedModule module) {
-        super(module);
+    AntiDetectionHooks() {
     }
 
     int install(ClassLoader classLoader) {
         int installed = 0;
         installed += hookVpnDetection(classLoader);
-        installed += hookMockLocation(classLoader);
-        installed += hookBuildProperties(classLoader);
+        installed += hookSimNetworkSpoofing(classLoader);
+        logInfo("Anti-detection hooks installed: " + installed + " target(s)");
         return installed;
     }
 
     /**
-     * VPN detection hook - disabled by default to prevent breaking network connectivity.
-     * Enable only when VPN hiding is actually needed.
+     * VPN detection hook — filters VPN network interfaces from enumeration.
+     * Only filters tun and ppp prefixes, matching SimpleTikTokMod exactly.
      */
     private int hookVpnDetection(ClassLoader classLoader) {
-        // Disabled: filtering network interfaces can break connectivity on many devices
-        logInfo("Anti-VPN hook skipped (disabled to preserve network connectivity)");
-        return 0;
-    }
-
-    /**
-     * Hide mock location flag and mock provider status from TikTok.
-     * From GlobalKit: Settings.Secure.getInt("mock_location"), Location.isFromMockProvider
-     */
-    private int hookMockLocation(ClassLoader classLoader) {
         int installed = 0;
 
-        // Hide mock_location setting
         try {
-            Class<?> settingsSecure = Class.forName("android.provider.Settings$Secure");
-            Method getInt = settingsSecure.getMethod("getInt",
-                    android.content.ContentResolver.class, String.class, int.class);
-            hook(getInt)
-                    .setId("toki-anti-mock-location")
+            Method getNetworkInterfaces = NetworkInterface.class.getMethod("getNetworkInterfaces");
+            hook(getNetworkInterfaces)
+                    .setId("anti-vpn-getNetworkInterfaces")
                     .intercept(chain -> {
-                        String key = (String) chain.getArg(1);
-                        if ("mock_location".equals(key)) {
-                            return 0;
+                        Enumeration<NetworkInterface> original =
+                                (Enumeration<NetworkInterface>) chain.proceed();
+                        if (original == null) return null;
+                        ArrayList<NetworkInterface> filtered = new ArrayList<>();
+                        while (original.hasMoreElements()) {
+                            NetworkInterface ni = original.nextElement();
+                            String name = ni.getName().toLowerCase(Locale.ROOT);
+                            if (!name.startsWith("tun") && !name.startsWith("ppp")) {
+                                filtered.add(ni);
+                            }
                         }
-                        return chain.proceed();
+                        return Collections.enumeration(filtered);
                     });
             installed++;
         } catch (Throwable error) {
-            logError("Unable to hook Settings.Secure#getInt for mock_location", error);
+            logError("Unable to hook NetworkInterface#getNetworkInterfaces", error);
         }
 
-        // Hide isFromMockProvider
+        return installed;
+    }
+
+    /**
+     * Spoof TelephonyManager to make TikTok think SIM is present and
+     * network is connected. From SimpleTikTokMod.
+     */
+    private int hookSimNetworkSpoofing(ClassLoader classLoader) {
+        int installed = 0;
+
+        // hasIccCard → true (SIM present)
         try {
-            Method method = Location.class.getMethod("isFromMockProvider");
+            Method method = TelephonyManager.class.getMethod("hasIccCard");
             hook(method)
-                    .setId("toki-anti-mock-provider")
+                    .setId("anti-detect-hasIccCard")
+                    .intercept(chain -> true);
+            installed++;
+        } catch (Throwable error) {
+            logError("Unable to hook TelephonyManager#hasIccCard", error);
+        }
+
+        // getSimState → 5 (SIM_STATE_READY)
+        try {
+            Method method = TelephonyManager.class.getMethod("getSimState");
+            hook(method)
+                    .setId("anti-detect-getSimState")
+                    .intercept(chain -> 5);
+            installed++;
+        } catch (Throwable error) {
+            logError("Unable to hook TelephonyManager#getSimState", error);
+        }
+
+        // getNetworkType → 13 (NETWORK_TYPE_LTE)
+        try {
+            Method method = TelephonyManager.class.getMethod("getNetworkType");
+            hook(method)
+                    .setId("anti-detect-getNetworkType")
+                    .intercept(chain -> 13);
+            installed++;
+        } catch (Throwable error) {
+            logError("Unable to hook TelephonyManager#getNetworkType", error);
+        }
+
+        // getDataNetworkType → 13 (NETWORK_TYPE_LTE)
+        try {
+            Method method = TelephonyManager.class.getMethod("getDataNetworkType");
+            hook(method)
+                    .setId("anti-detect-getDataNetworkType")
+                    .intercept(chain -> 13);
+            installed++;
+        } catch (Throwable error) {
+            logError("Unable to hook TelephonyManager#getDataNetworkType", error);
+        }
+
+        // isNetworkRoaming → false
+        try {
+            Method method = TelephonyManager.class.getMethod("isNetworkRoaming");
+            hook(method)
+                    .setId("anti-detect-isNetworkRoaming")
                     .intercept(chain -> false);
             installed++;
         } catch (Throwable error) {
-            logError("Unable to hook Location#isFromMockProvider", error);
-        }
-
-        return installed;
-    }
-
-    /**
-     * Spoof Build properties to prevent device fingerprinting.
-     * From SimpleTikTokMod: Build fields + SystemProperties
-     */
-    private int hookBuildProperties(ClassLoader classLoader) {
-        int installed = 0;
-
-        // Hook SystemProperties.get to intercept property lookups
-        try {
-            Class<?> sysPropClass = Class.forName("android.os.SystemProperties");
-            Method getMethod = sysPropClass.getMethod("get", String.class, String.class);
-            hook(getMethod)
-                    .setId("toki-anti-sysprop")
-                    .intercept(chain -> {
-                        String key = (String) chain.getArg(0);
-                        String defaultVal = (String) chain.getArg(1);
-                        // Block fingerprinting properties
-                        if ("ro.product.model".equals(key)) {
-                            return Build.MODEL;
-                        }
-                        if ("ro.product.manufacturer".equals(key)) {
-                            return Build.MANUFACTURER;
-                        }
-                        if ("ro.product.brand".equals(key)) {
-                            return Build.BRAND;
-                        }
-                        if ("ro.product.device".equals(key)) {
-                            return Build.DEVICE;
-                        }
-                        if ("ro.product.name".equals(key)) {
-                            return Build.PRODUCT;
-                        }
-                        if ("ro.build.display.id".equals(key)) {
-                            return Build.DISPLAY;
-                        }
-                        if ("ro.build.version.release".equals(key)) {
-                            return Build.VERSION.RELEASE;
-                        }
-                        if ("ro.build.version.sdk".equals(key)) {
-                            return String.valueOf(Build.VERSION.SDK_INT);
-                        }
-                        return chain.proceed();
-                    });
-            installed++;
-        } catch (Throwable error) {
-            logError("Unable to hook SystemProperties#get", error);
+            logError("Unable to hook TelephonyManager#isNetworkRoaming", error);
         }
 
         return installed;

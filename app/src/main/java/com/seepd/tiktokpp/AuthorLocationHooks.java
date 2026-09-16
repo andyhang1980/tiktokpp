@@ -4,15 +4,12 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Locale;
 
-import io.github.libxposed.api.XposedModule;
-
 /** Adds the author's region at TikTok's shared author-title builder. */
 final class AuthorLocationHooks extends HookFeature {
     private static final int REGIONAL_INDICATOR_A = 0x1F1E6;
     private static final String GLOBE = "\uD83C\uDF10";
 
-    AuthorLocationHooks(XposedModule module) {
-        super(module);
+    AuthorLocationHooks() {
     }
 
     int install(ClassLoader classLoader) {

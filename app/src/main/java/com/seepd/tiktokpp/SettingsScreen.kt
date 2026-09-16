@@ -713,6 +713,15 @@ private fun SettingsContent(
                 )
                 GroupDivider()
                 SwitchSettingRow(
+                    title = stringResource(R.string.telephony_spoof),
+                    summary = stringResource(R.string.telephony_spoof_summary),
+                    checked = state.telephonySpoof,
+                    onCheckedChange = { checked ->
+                        onUpdate { it.copy(telephonySpoof = checked) }
+                    },
+                )
+                GroupDivider()
+                SwitchSettingRow(
                     title = stringResource(R.string.skip_startup_login),
                     summary = stringResource(R.string.skip_startup_login_summary),
                     checked = state.skipStartupLogin,

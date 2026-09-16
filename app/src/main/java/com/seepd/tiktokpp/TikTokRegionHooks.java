@@ -5,8 +5,6 @@ import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import io.github.libxposed.api.XposedModule;
-
 /**
  * TikTok-specific region/environment hooks merged from TikTokRegionHook v1.5.0.
  * <p>
@@ -25,8 +23,7 @@ final class TikTokRegionHooks extends HookFeature {
     private final String mccMnc;
     private final String carrier;
 
-    TikTokRegionHooks(XposedModule module, RegionPreset preset) {
-        super(module);
+    TikTokRegionHooks(RegionPreset preset) {
         this.regionCode = preset.code.toUpperCase(Locale.ROOT);
         this.countryCode = preset.code.toLowerCase(Locale.ROOT);
         this.mccMnc = preset.operator;

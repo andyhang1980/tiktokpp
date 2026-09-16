@@ -8,8 +8,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
-import io.github.libxposed.api.XposedModule;
-
 /** Filters 46.4.3 FYP network responses and cache-backed feed insertions. */
 final class FeedHooks extends HookFeature {
     private static final String FEED_FETCH_MODEL = "X.12gy";
@@ -21,8 +19,7 @@ final class FeedHooks extends HookFeature {
             "com.ss.android.ugc.aweme.feed.panel.RecommendFeedFragmentPanel";
     private static final String INSERT_REQUEST = "X.0SYB";
 
-    FeedHooks(XposedModule module) {
-        super(module);
+    FeedHooks() {
     }
 
     void install(ClassLoader classLoader, ModuleConfig config) {

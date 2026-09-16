@@ -2,12 +2,9 @@ package com.seepd.tiktokpp;
 
 import java.lang.reflect.Method;
 
-import io.github.libxposed.api.XposedModule;
-
 /** Overrides duet and stitch permission getters selected by the user. */
 final class ReusePermissionHooks extends HookFeature {
-    ReusePermissionHooks(XposedModule module) {
-        super(module);
+    ReusePermissionHooks() {
     }
 
     void install(ClassLoader classLoader, ModuleConfig config) {

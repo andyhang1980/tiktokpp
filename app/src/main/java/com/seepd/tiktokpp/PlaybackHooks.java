@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import io.github.libxposed.api.XposedModule;
-
 /** Handles loop prevention, progress-bar visibility, and the configured playback speed. */
 final class PlaybackHooks extends HookFeature {
     private final AtomicBoolean configInvocationLogged = new AtomicBoolean(false);
@@ -18,8 +16,7 @@ final class PlaybackHooks extends HookFeature {
     private final AtomicBoolean speedFailureLogged = new AtomicBoolean(false);
     private final WeakHashMap<Object, String> speedSourceIds = new WeakHashMap<>();
 
-    PlaybackHooks(XposedModule module) {
-        super(module);
+    PlaybackHooks() {
     }
 
     /** Resolves a renamed instance method without weakening its parameter signature. */

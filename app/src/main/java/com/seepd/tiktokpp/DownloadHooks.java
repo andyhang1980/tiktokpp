@@ -10,14 +10,46 @@ import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import io.github.libxposed.api.XposedModule;
+import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedBridge;
+import de.robv.android.xposed.XposedHelpers;
 
 /** Handles download permission overrides, no-watermark addresses, and save locations. */
 final class DownloadHooks extends HookFeature {
     private final AtomicBoolean locationRewriteLogged = new AtomicBoolean(false);
 
-    DownloadHooks(XposedModule module) {
-        super(module);
+    DownloadHooks() {
+    }
+
+    /** Only hooks the no-watermark download address — safe for share panel. */
+    static void downloadNoWatermarkOnly(ClassLoader classLoader) {
+        try {
+            Class<?> type = Class.forName(
+                    "com.ss.android.ugc.aweme.feed.model.Video", false, classLoader);
+            Method noWatermarkAddress = type.getMethod("getDownloadNoWatermarkAddr");
+            for (Method method : type.getDeclaredMethods()) {
+                if (!"getDownloadAddr".equals(method.getName()) || method.getParameterCount() != 0) {
+                    continue;
+                }
+                method.setAccessible(true);
+                XposedBridge.hookMethod(method, new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) {
+                        Object normalAddress = param.getResult();
+                        try {
+                            Object result = noWatermarkAddress.invoke(param.thisObject);
+                            param.setResult(result != null ? result : normalAddress);
+                        } catch (ReflectiveOperationException | RuntimeException ignored) {
+                        }
+                    }
+                });
+            }
+            XposedBridge.log("TikTokPP: No-watermark download address hook installed");
+        } catch (ClassNotFoundException | NoSuchMethodException ignored) {
+            XposedBridge.log("TikTokPP: No-watermark download hook unavailable");
+        } catch (Throwable error) {
+            XposedBridge.log("TikTokPP: Unable to hook no-watermark download address: " + error);
+        }
     }
 
     void installRestrictionRemoval(ClassLoader classLoader) {

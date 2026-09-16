@@ -60,6 +60,8 @@
     <string name="language_spoof_summary">伪装设备系统语言设置</string>
     <string name="timezone_spoof">伪装时区</string>
     <string name="timezone_spoof_summary">伪装设备系统时区设置</string>
+    <string name="telephony_spoof">伪装运营商</string>
+    <string name="telephony_spoof_summary">伪装 SIM 卡运营商、国家代码和网络类型</string>
     <string name="skip_startup_login">跳过启动登录检查</string>
     <string name="skip_startup_login_summary">启动时跳过登录验证页面</string>
     <string name="force_region">强制地区</string>

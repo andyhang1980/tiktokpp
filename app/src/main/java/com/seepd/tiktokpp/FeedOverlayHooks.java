@@ -9,12 +9,9 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.libxposed.api.XposedModule;
-
 /** Installs TikTok 46.4.3 feed payload, label, anchor, and warning gates. */
 final class FeedOverlayHooks extends HookFeature {
-    FeedOverlayHooks(XposedModule module) {
-        super(module);
+    FeedOverlayHooks() {
     }
 
     int install(ClassLoader classLoader, ModuleConfig config) {

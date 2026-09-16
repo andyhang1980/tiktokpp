@@ -83,6 +83,7 @@ final class ModuleConfig {
     static final String KEY_LEGACY_HIDE_BOTTOM_PROFILE = "hide_bottom_profile";
     static final String KEY_HIDE_VIDEO_PROGRESS_BAR = "hide_video_progress_bar";
     static final String KEY_HIDE_TRANSLATION_CONTROLS = "hide_translation_controls";
+    static final String KEY_TELEPHONY_SPOOF = "telephony_spoof";
     static final String KEY_GPS_SPOOF = "gps_spoof";
     static final String KEY_GPS_LATITUDE = "gps_latitude";
     static final String KEY_GPS_LONGITUDE = "gps_longitude";
@@ -157,6 +158,7 @@ final class ModuleConfig {
     final boolean hideVideoProgressBar;
     final boolean hideTranslationControls;
     final boolean gpsSpoof;
+    final boolean telephonySpoof;
     final double gpsLatitude;
     final double gpsLongitude;
 
@@ -188,7 +190,7 @@ final class ModuleConfig {
                  boolean hideLiveEntry,
                  boolean hideTopNavigation, boolean hideSearchEntry,
                  boolean hideBottomNavigation, boolean hideVideoProgressBar,
-                 boolean hideTranslationControls, boolean gpsSpoof,
+                 boolean hideTranslationControls, boolean telephonySpoof, boolean gpsSpoof,
                  double gpsLatitude, double gpsLongitude) {
         this.regionSpoof = regionSpoof;
         this.region = region;
@@ -252,6 +254,7 @@ final class ModuleConfig {
         this.hideBottomNavigation = hideBottomNavigation;
         this.hideVideoProgressBar = hideVideoProgressBar;
         this.hideTranslationControls = hideTranslationControls;
+        this.telephonySpoof = telephonySpoof;
         this.gpsSpoof = gpsSpoof;
         this.gpsLatitude = clampCoordinate(gpsLatitude, -90.0, 90.0, 0.0);
         this.gpsLongitude = clampCoordinate(gpsLongitude, -180.0, 180.0, 0.0);
@@ -344,6 +347,7 @@ final class ModuleConfig {
                 loadBottomNavigationHidden(preferences),
                 preferences.getBoolean(KEY_HIDE_VIDEO_PROGRESS_BAR, false),
                 preferences.getBoolean(KEY_HIDE_TRANSLATION_CONTROLS, false),
+                preferences.getBoolean(KEY_TELEPHONY_SPOOF, true),
                 preferences.getBoolean(KEY_GPS_SPOOF, false),
                 parseCoordinate(preferences.getString(KEY_GPS_LATITUDE, "0"), -90.0, 90.0),
                 parseCoordinate(preferences.getString(KEY_GPS_LONGITUDE, "0"), -180.0, 180.0)
@@ -351,17 +355,18 @@ final class ModuleConfig {
     }
 
     static ModuleConfig defaults() {
-        return new ModuleConfig(false, RegionPreset.US, false, false, false, false, false, false, false,
-                 false, false, false, false, false, false, false, false, false,
-                false, PlaybackSpeed.DEFAULT, false,
+        return new ModuleConfig(
+                false, RegionPreset.US, false, false, false, false,
+                false, false, false, false, false, false, false, false, false, false,
+                false, false, false, PlaybackSpeed.DEFAULT, false,
                 "Movies/TikTok", "Pictures/TikTok", "Movies/TikTok",
                 false, false,
-                 60, 0, Long.MAX_VALUE, 0, Long.MAX_VALUE,
-                  false, false, false, false, false, false, false, false, false,
-                 false, false, false,
-                 false, false, false, false, false, false, false, false,
-                 false, false, false, false, false, false, false, false, false,
-                 false, false, false, 0.0, 0.0);
+                60, 0L, Long.MAX_VALUE, 0L, Long.MAX_VALUE,
+                false, false, false, false, false, false, false, false, false,
+                false, false, false, false, false, false, false, false, false,
+                false, false, false, false, false, false, false, false, false,
+                false, false, false, false,
+                true, false, 0.0, 0.0);
     }
 
     boolean hasComponentPurificationEnabled() {

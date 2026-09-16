@@ -7,15 +7,12 @@ import android.os.SystemClock;
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import io.github.libxposed.api.XposedModule;
-
 /** Handles startup-only UI hooks that depend on the process attachment time. */
 final class StartupHooks extends HookFeature {
     private final AtomicBoolean loginClosedLogged = new AtomicBoolean(false);
     private final long processAttachedAt;
 
-    StartupHooks(XposedModule module, long processAttachedAt) {
-        super(module);
+    StartupHooks(long processAttachedAt) {
         this.processAttachedAt = processAttachedAt;
     }
 

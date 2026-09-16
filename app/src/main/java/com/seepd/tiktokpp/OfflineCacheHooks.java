@@ -9,8 +9,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import io.github.libxposed.api.XposedModule;
-
 /** Prevents TikTok from serving offline-mode feed items while Android has validated Internet. */
 final class OfflineCacheHooks extends HookFeature {
     private static final String CACHE_PROVIDER_REGISTRY = "X.0MPt";
@@ -21,8 +19,7 @@ final class OfflineCacheHooks extends HookFeature {
     private final Context context;
     private final AtomicBoolean blockedLogged = new AtomicBoolean(false);
 
-    OfflineCacheHooks(XposedModule module, Context context) {
-        super(module);
+    OfflineCacheHooks(Context context) {
         Context applicationContext = context.getApplicationContext();
         this.context = applicationContext == null ? context : applicationContext;
     }

@@ -25,8 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import io.github.libxposed.api.XposedModule;
-
 /** Restores and maintains the TikTok 46.4.3 comment translation control. */
 final class CommentTranslationHooks extends HookFeature {
     private static final String BUTTON_TAG = "toki-official-comment-translation-button";
@@ -41,8 +39,7 @@ final class CommentTranslationHooks extends HookFeature {
     private volatile String commentPageAwemeId;
     private volatile String translatedAwemeId;
 
-    CommentTranslationHooks(XposedModule module, Context stateContext, boolean translationEnabled) {
-        super(module);
+    CommentTranslationHooks(Context stateContext, boolean translationEnabled) {
         this.stateContext = stateContext;
         this.translationEnabled = translationEnabled;
     }

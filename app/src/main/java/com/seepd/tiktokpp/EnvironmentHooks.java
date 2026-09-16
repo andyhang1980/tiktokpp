@@ -14,12 +14,9 @@ import java.util.TimeZone;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import io.github.libxposed.api.XposedModule;
-
 /** Installs region, locale, timezone, telephony, and GPS environment hooks. */
 final class EnvironmentHooks extends HookFeature {
-    EnvironmentHooks(XposedModule module) {
-        super(module);
+    EnvironmentHooks() {
     }
 
     void installRegion(ClassLoader classLoader, RegionPreset preset) {
