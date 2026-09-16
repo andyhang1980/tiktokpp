@@ -241,8 +241,12 @@ final class PurificationHooks extends HookFeature {
                     contentView = (View) value;
                 }
             } catch (ReflectiveOperationException | RuntimeException ignored) {
-                // The lifecycle view remains a safe fallback when the base component changes.
             }
+        }
+        // Only hide if the view is in the main feed activity, not in share panel or other activities
+        View targetView = contentView != null ? contentView : lifecycleView;
+        if (targetView != null && !isInMainActivity(targetView)) {
+            return;
         }
         if (contentView != null) {
             contentView.setVisibility(View.GONE);
@@ -250,6 +254,26 @@ final class PurificationHooks extends HookFeature {
         if (lifecycleView != null && lifecycleView != contentView) {
             lifecycleView.setVisibility(View.GONE);
         }
+    }
+
+    private static boolean isInMainActivity(View view) {
+        try {
+            android.app.Activity activity = getActivityFromView(view);
+            return activity != null && MAIN_ACTIVITY.equals(activity.getClass().getName());
+        } catch (Throwable ignored) {
+            return false;
+        }
+    }
+
+    private static android.app.Activity getActivityFromView(View view) {
+        android.content.Context context = view.getContext();
+        while (context instanceof android.content.ContextWrapper) {
+            if (context instanceof android.app.Activity) {
+                return (android.app.Activity) context;
+            }
+            context = ((android.content.ContextWrapper) context).getBaseContext();
+        }
+        return null;
     }
 
     private static Method findComponentContentViewMethod(Class<?> type) {

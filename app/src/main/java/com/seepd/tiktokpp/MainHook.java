@@ -144,8 +144,7 @@ public final class MainHook implements IXposedHookLoadPackage {
                             } catch (Throwable t) { log("FeedOverlayHooks failed: " + t.getMessage()); }
 
                             // ── Purification hooks ──
-                            // installComponents disabled (breaks share panel)
-                            // installGlobalNavigation disabled (also breaks share panel)
+                            // Disabled — any component hiding breaks share panel
 
                             // ── Startup login skip ──
                             try {

@@ -23,6 +23,12 @@ final class FeedHooks extends HookFeature {
     }
 
     void install(ClassLoader classLoader, ModuleConfig config) {
+        boolean anyFilter = config.hideFeedAds || config.hideLive || config.hideImages
+                || config.hideAiGenerated || config.forceRegion || config.hideLongPosts
+                || config.filterViewsLikes;
+        if (!anyFilter) {
+            return;
+        }
         FeedFilter filter = new FeedFilter(config);
         hookFeedResults(classLoader, "com.ss.android.ugc.aweme.feed.FeedApiService", filter);
         hookFeedResults(classLoader, "com.ss.android.ugc.aweme.feed.api.FeedApi", filter);
