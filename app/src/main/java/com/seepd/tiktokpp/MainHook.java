@@ -2,12 +2,19 @@ package com.seepd.tiktokpp;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.SystemClock;
+import android.view.MotionEvent;
+import android.view.View;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.NetworkInterface;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Locale;
 
 import android.telephony.TelephonyManager;
@@ -171,6 +178,13 @@ public final class MainHook implements IXposedHookLoadPackage {
                                 offlineCacheHooks.install(lpparam.classLoader);
                             } catch (Throwable t) { log("OfflineCacheHooks failed: " + t.getMessage()); }
 
+                            // ── Extra hooks (new features) ──
+                            installScreenshotBypass();
+                            installForceHd(lpparam.classLoader);
+                            installLongPress2xSpeed(lpparam.classLoader);
+                            installAutoSkipAds(lpparam.classLoader);
+                            installHideReadStatus(lpparam.classLoader);
+
                             log("All region + feature hooks installed");
                         }
                     });
@@ -257,6 +271,212 @@ public final class MainHook implements IXposedHookLoadPackage {
             }
         } catch (Throwable t) {
             log("hookAclReturnConstant failed: " + className + "#" + methodName);
+        }
+    }
+
+    private static void installScreenshotBypass() {
+        try {
+            final int SECURE = android.view.WindowManager.LayoutParams.FLAG_SECURE;
+
+            XposedHelpers.findAndHookMethod(android.view.Window.class, "setFlags",
+                    int.class, int.class, new XC_MethodHook() {
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam param) {
+                            int flags = (int) param.args[0];
+                            int mask = (int) param.args[1];
+                            if ((mask & SECURE) != 0) {
+                                param.args[0] = flags & ~SECURE;
+                                param.args[1] = mask & ~SECURE;
+                            }
+                        }
+                    });
+
+            XposedHelpers.findAndHookMethod(android.view.Window.class, "addFlags",
+                    int.class, new XC_MethodHook() {
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam param) {
+                            int flags = (int) param.args[0];
+                            if ((flags & SECURE) != 0) {
+                                param.args[0] = flags & ~SECURE;
+                            }
+                        }
+                    });
+
+            log("Screenshot bypass installed");
+        } catch (Throwable t) {
+            log("Screenshot bypass failed: " + t.getMessage());
+        }
+    }
+
+    private static void installForceHd(ClassLoader classLoader) {
+        int hooked = 0;
+        try {
+            Class<?> videoModel = Class.forName(
+                    "com.ss.android.ugc.aweme.feed.model.Video",
+                    false, classLoader);
+            for (Method method : videoModel.getDeclaredMethods()) {
+                if ("getQuality".equals(method.getName()) && method.getParameterCount() == 0) {
+                    method.setAccessible(true);
+                    XposedBridge.hookMethod(method, XC_MethodReplacement.returnConstant(1080));
+                    hooked++;
+                }
+            }
+        } catch (ClassNotFoundException ignored) {
+        }
+        try {
+            Class<?> playAddr = Class.forName(
+                    "com.ss.android.ugc.aweme.feed.model.PlayAddr",
+                    false, classLoader);
+            for (Method method : playAddr.getDeclaredMethods()) {
+                if ("getQuality".equals(method.getName()) && method.getParameterCount() == 0) {
+                    method.setAccessible(true);
+                    XposedBridge.hookMethod(method, XC_MethodReplacement.returnConstant(1080));
+                    hooked++;
+                }
+            }
+        } catch (ClassNotFoundException ignored) {
+        }
+        if (hooked > 0) {
+            log("Force HD hooks installed: " + hooked + " target(s)");
+        }
+    }
+
+    private static void installLongPress2xSpeed(ClassLoader classLoader) {
+        try {
+            final float[] originalSpeed = {1.0f};
+            final boolean[] isLongPressing = {false};
+
+            Class<?> videoPlayerClass = Class.forName(
+                    "com.ss.android.ugc.aweme.feed.model.VideoPlayer", false, classLoader);
+
+            for (Method method : videoPlayerClass.getDeclaredMethods()) {
+                if ("setPlaybackSpeed".equals(method.getName()) && method.getParameterCount() == 1
+                        && method.getParameterTypes()[0] == float.class) {
+                    method.setAccessible(true);
+                    final Method targetMethod = method;
+                    XposedBridge.hookMethod(method, new XC_MethodHook() {
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam param) {
+                            float speed = (float) param.args[0];
+                            if (isLongPressing[0] && speed != 2.0f) {
+                                originalSpeed[0] = speed;
+                            }
+                        }
+                    });
+                    break;
+                }
+            }
+
+            log("Long press 2x speed hooks installed");
+        } catch (Throwable t) {
+            log("Long press 2x speed failed: " + t.getMessage());
+        }
+    }
+
+    private static void installAutoSkipAds(ClassLoader classLoader) {
+        try {
+            Class<?> feedItemListClass = Class.forName(
+                    "com.ss.android.ugc.aweme.feed.model.FeedItemList", false, classLoader);
+
+            for (Method method : feedItemListClass.getDeclaredMethods()) {
+                if ("getItems".equals(method.getName()) && method.getParameterCount() == 0) {
+                    method.setAccessible(true);
+                    XposedBridge.hookMethod(method, new XC_MethodHook() {
+                        @Override
+                        protected void afterHookedMethod(MethodHookParam param) {
+                            Object result = param.getResult();
+                            if (!(result instanceof List)) return;
+                            List<?> items = (List<?>) result;
+                            if (items.isEmpty()) return;
+
+                            List<Object> filtered = new ArrayList<>();
+                            for (Object item : items) {
+                                if (item == null || !isAd(item)) {
+                                    filtered.add(item);
+                                }
+                            }
+                            if (filtered.size() < items.size()) {
+                                log("Auto skip ads: removed " + (items.size() - filtered.size()) + " ad(s)");
+                            }
+                            param.setResult(filtered);
+                        }
+                    });
+                    log("Auto skip ads hook installed");
+                    return;
+                }
+            }
+            log("Auto skip ads: FeedItemList.getItems not found");
+        } catch (Throwable t) {
+            log("Auto skip ads failed: " + t.getMessage());
+        }
+    }
+
+    private static boolean isAd(Object aweme) {
+        try {
+            Method isAdMethod = aweme.getClass().getMethod("isAd");
+            Object result = isAdMethod.invoke(aweme);
+            if (Boolean.TRUE.equals(result)) return true;
+        } catch (Throwable ignored) {}
+        try {
+            Method getAwemeType = aweme.getClass().getMethod("getAwemeType");
+            Object result = getAwemeType.invoke(aweme);
+            if (result instanceof Integer) {
+                int type = (Integer) result;
+                if (type == 104 || type == 105) return true;
+            }
+        } catch (Throwable ignored) {}
+        try {
+            Method getAwemeRawAd = aweme.getClass().getMethod("getAwemeRawAd");
+            Object result = getAwemeRawAd.invoke(aweme);
+            if (result != null) return true;
+        } catch (Throwable ignored) {}
+        return false;
+    }
+
+    private static void installHideReadStatus(ClassLoader classLoader) {
+        int hooked = 0;
+        try {
+            Class<?> imModuleUtils = Class.forName(
+                    "com.ss.android.ugc.aweme.im.sdk.utils.IMModuleUtils",
+                    false, classLoader);
+            for (Method method : imModuleUtils.getDeclaredMethods()) {
+                String name = method.getName();
+                if ((name.contains("sendReadStatus") || name.contains("markRead")
+                        || name.contains("readReceipt") || name.contains("LIZJ"))
+                        && !Modifier.isStatic(method.getModifiers())) {
+                    method.setAccessible(true);
+                    XposedBridge.hookMethod(method, XC_MethodReplacement.returnConstant(null));
+                    hooked++;
+                }
+            }
+        } catch (ClassNotFoundException ignored) {
+        } catch (Throwable t) {
+            log("Hide read status IM hook failed: " + t.getMessage());
+        }
+
+        try {
+            Class<?> conversationManager = Class.forName(
+                    "com.ss.android.ugc.aweme.im.sdk.chat.ConversationManager",
+                    false, classLoader);
+            for (Method method : conversationManager.getDeclaredMethods()) {
+                String name = method.getName();
+                if ((name.contains("sendReadStatus") || name.contains("markRead")
+                        || name.contains("readMessage") || name.contains("LIZJ"))
+                        && !Modifier.isStatic(method.getModifiers())) {
+                    method.setAccessible(true);
+                    XposedBridge.hookMethod(method, XC_MethodReplacement.returnConstant(null));
+                    hooked++;
+                }
+            }
+        } catch (ClassNotFoundException ignored) {
+        } catch (Throwable t) {
+            log("Hide read status ConversationManager hook failed: " + t.getMessage());
+        }
+
+        if (hooked > 0) {
+            log("Hide read status hooks installed: " + hooked + " target(s)");
+        } else {
+            log("Hide read status: no matching methods found (obfuscation may differ)");
         }
     }
 }
