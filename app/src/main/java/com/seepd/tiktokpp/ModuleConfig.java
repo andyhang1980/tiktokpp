@@ -284,9 +284,17 @@ final class ModuleConfig {
     }
 
     static ModuleConfig fromPreferences(SharedPreferences preferences) {
+        boolean gpsSpoof = preferences.getBoolean(KEY_GPS_SPOOF, false);
+        RegionPreset region = RegionPreset.fromCode(preferences.getString(KEY_REGION, RegionPreset.US.code));
+        double gpsLat = parseCoordinate(preferences.getString(KEY_GPS_LATITUDE, "0"), -90.0, 90.0);
+        double gpsLng = parseCoordinate(preferences.getString(KEY_GPS_LONGITUDE, "0"), -180.0, 180.0);
+        if (gpsSpoof && gpsLat == 0.0 && gpsLng == 0.0) {
+            gpsLat = region.latitude;
+            gpsLng = region.longitude;
+        }
         return new ModuleConfig(
                 preferences.getBoolean(KEY_REGION_SPOOF, false),
-                RegionPreset.fromCode(preferences.getString(KEY_REGION, RegionPreset.US.code)),
+                region,
                 preferences.getBoolean(KEY_LANGUAGE_SPOOF, false),
                 preferences.getBoolean(KEY_TIMEZONE_SPOOF, false),
                 preferences.getBoolean(KEY_SKIP_STARTUP_LOGIN, false),
@@ -348,9 +356,9 @@ final class ModuleConfig {
                 preferences.getBoolean(KEY_HIDE_VIDEO_PROGRESS_BAR, false),
                 preferences.getBoolean(KEY_HIDE_TRANSLATION_CONTROLS, false),
                 preferences.getBoolean(KEY_TELEPHONY_SPOOF, true),
-                preferences.getBoolean(KEY_GPS_SPOOF, false),
-                parseCoordinate(preferences.getString(KEY_GPS_LATITUDE, "0"), -90.0, 90.0),
-                parseCoordinate(preferences.getString(KEY_GPS_LONGITUDE, "0"), -180.0, 180.0)
+                gpsSpoof,
+                gpsLat,
+                gpsLng
         );
     }
 
